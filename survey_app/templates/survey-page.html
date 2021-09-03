@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Survey page</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+</head>
+<body>
+    <div class="container mt-5 bg-light col-6 ">
+        <h4 class="display-4">Survey</h4>
+        <form action="/survey/{{ id }}" method="POST">
+        {% csrf_token %}
+            {% for q in Questions %}
+              <div class="mb-3 col-6">
+                <label for="exampleInputEmail1" class="form-label">{{ q.title }}</label>
+                  {% if q.type == 'select' %}
+                      <select name="{{ q.title }}" class="form-select" aria-label="Default select example">
+                            {% if q.choices %}
+                                {% for choice in q.choices %}
+                                    <option value="{{ choice }}"> {{ choice }} </option>
+                                {% endfor %}
+                            {% endif %}
+                      </select>
+                {% elif q.type == 'textarea' %}
+                      <textarea name="{{ q.title }}" class="form-control"></textarea>
+                {% elif q.type == 'radio' %}
+                    {% if q.choices %}
+                        {% for choice in q.choices %}
+                            <div class="form-check">
+                              <input class="form-check-input" type="radio" name="{{ q.title }}" value="{{ choice }}" id="flexRadioDefault{{ forloop.counter }}">
+                              <label class="form-check-label" for="flexRadioDefault{{ forloop.counter }}">
+                                {{ choice }}
+                              </label>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                  {% elif q.type == 'checkbox' %}
+                    {% if q.choices %}
+                        {% for choice in q.choices %}
+                            <div class="form-check">
+                              <input class="form-check-input" type="checkbox" name="{{ q.title }}" value="{{ choice }}" id="flexRadioDefault1">
+                              <label class="form-check-label" for="flexRadioDefault1">
+                                {{ choice }}
+                              </label>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                  {% else %}
+                      <input name="{{ q.title }}" type="{{ q.type }}" accept="image/*" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                {% endif %}
+              </div>
+            {% endfor %}
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+{#        {% for q in Questions %}#}
+{#            <label>{{ q.title }}</label>#}
+{#            {% if q.type == 'select' %}#}
+{#                <select></select>#}
+{#            {% elif q.type == 'textarea' %}#}
+{#                <textarea></textarea>#}
+{#            {% else %}#}
+{#                <input type="{{ q.type }}" >#}
+{#            {% endif %}#}
+{#            <br>#}
+{#        {% endfor %}#}
+    </div>
+</body>
+</html>
